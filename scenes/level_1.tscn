@@ -1,18 +1,67 @@
-[gd_scene load_steps=4 format=3 uid="uid://cma1mclrg8yf"]
+[gd_scene load_steps=7 format=3 uid="uid://cma1mclrg8yf"]
 
-[ext_resource type="Script" path="res://scenes/level_1.gd" id="1_gsr1n"]
+[ext_resource type="Script" path="res://scripts/level_1.gd" id="1_gsr1n"]
 [ext_resource type="Texture2D" uid="uid://bqli3l7vl8rth" path="res://assets/purple.png" id="1_ybu16"]
 [ext_resource type="PackedScene" uid="uid://igvw4y0setf8" path="res://scenes/player.tscn" id="2_s7gup"]
+[ext_resource type="PackedScene" uid="uid://75dklo4kslih" path="res://maze.tscn" id="4_sc77x"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_xrpue"]
+font_size = 32
+
+[sub_resource type="GDScript" id="GDScript_lluvb"]
+script/source = "extends Area2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+"
 
 [node name="Level1" type="Node2D"]
 script = ExtResource("1_gsr1n")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="Graphics" type="Node" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Graphics"]
+layer = -5
+
+[node name="Background" type="TextureRect" parent="Graphics/CanvasLayer"]
 z_index = -1000
-offset_right = 1241.0
-offset_bottom = 1241.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("1_ybu16")
 stretch_mode = 1
 
+[node name="Start Label" type="Label" parent="Graphics"]
+offset_left = 416.0
+offset_top = 293.0
+offset_right = 511.0
+offset_bottom = 338.0
+text = "START"
+label_settings = SubResource("LabelSettings_xrpue")
+
+[node name="End Label" type="Label" parent="Graphics"]
+offset_left = 827.0
+offset_top = -54.0
+offset_right = 922.0
+offset_bottom = -9.0
+text = "END"
+label_settings = SubResource("LabelSettings_xrpue")
+
 [node name="Player" parent="." instance=ExtResource("2_s7gup")]
+z_index = 1000
 position = Vector2(466, 381)
+
+[node name="Maze" parent="." instance=ExtResource("4_sc77x")]
+position = Vector2(659, 383)
+script = SubResource("GDScript_lluvb")
+
+[connection signal="body_exited" from="Maze" to="." method="_on_maze_body_exited"]
